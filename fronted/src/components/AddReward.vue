@@ -2,14 +2,14 @@
   <el-main>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
-        <el-tag type="danger">员工号</el-tag>
+        <el-tag type="success">员工号</el-tag>
 
         <el-input v-model="load.EmployeeID" placeholder="请输入内容"></el-input>
       </el-col>
     </el-row>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
-        <el-tag type="danger">罚款时间</el-tag>
+        <el-tag type="success">奖励时间</el-tag>
 
         <el-date-picker v-model="load.Time" type="month" placeholder="选择月">
         </el-date-picker
@@ -18,7 +18,7 @@
     <el-row type="flex" class="row-bg" justify="center"></el-row>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
-        <el-tag type="danger">罚款金额</el-tag>
+        <el-tag type="success">奖励金额</el-tag>
 
         <el-input
           v-model="load.Amount"
@@ -30,7 +30,7 @@
 
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
-        <el-tag type="danger">罚款原因</el-tag>
+        <el-tag type="success">奖励原因</el-tag>
       </el-col>
     </el-row>
     <el-row type="flex" class="row-bg" justify="center">
@@ -47,7 +47,7 @@
 
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6"
-        ><el-button @click="add" type="primary">点我添加罚款</el-button></el-col
+        ><el-button @click="add" type="primary">点我添加奖励</el-button></el-col
       >
     </el-row>
   </el-main>
@@ -55,9 +55,9 @@
 
 <script>
 import dayjs from "dayjs";
-import FineDataService from "../services/FineDataService"
+import RewardDataService from "../services/RewardDataService"
 export default {
-  name: "addReward",
+  name: "add-reward",
   data() {
     return {
       load: {
@@ -68,16 +68,16 @@ export default {
       },
       options: [
         {
-          value: "迟到",
-          label: "迟到",
+          value: "工作积极",
+          label: "工作积极",
         },
         {
-          value: "早退",
-          label: "早退",
+          value: "全勤",
+          label: "全勤",
         },
         {
-          value: "长时间做工作以外的事情",
-          label: "长时间做工作以外的事情",
+          value: "见义勇为",
+          label: "见义勇为",
         },
       ],
     };
@@ -105,7 +105,7 @@ export default {
       }
       console.log(this.load);
       console.log("this.user", this.user);
-      FineDataService.create(this.load).then(res=>{
+      RewardDataService.create(this.load).then(res=>{
         console.log(res);
       })
    

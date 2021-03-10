@@ -25,17 +25,27 @@ export default new Router({
     {
       path: "/addReward",
       name: "addReward",
-      component: () => import("./components/reward/AddReward")
+      component: () => import("./components/AddReward")
     },
     {
       path: "/findReward",
       name: "findReward",
-      component: () => import("./components/reward/FindReward")
+      component: () => import("./components/FindReward")
     },
     {
       path: "/addFine",
       name: "addFine",
       component: () => import("./components/AddFine")
-    }
+    },
+    {
+      path: "/employeeList",
+      name: "employeeList",
+      component: () => import("./components/EmployeeList")
+    },
+    {
+      path: "/addBasicSchedule",
+      name: "addBasicSchedule",
+      component: () => import("./components/AddBasicSchedule")
+    },
   ]
 });
