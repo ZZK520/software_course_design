@@ -1,3 +1,5 @@
+const dayjs = require("dayjs");
+
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
@@ -14,8 +16,9 @@ module.exports = mongoose => {
     );
   
     schema.method("toJSON", function() {
-      const { __v, _id, ...object } = this.toObject();
+      const { __v, _id,Time, ...object } = this.toObject();
       object.id = _id;
+      object.Time=dayjs(object.Time).format('MM/YYYY');
       return object;
     });
   

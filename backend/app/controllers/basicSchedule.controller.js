@@ -1,15 +1,12 @@
 const db = require("../models");
-const FineSchedule = db.fineSchedules;
+const BasicSchedule = db.basicSchedules;
 
-const { searchUserByID } = require("../tools/search.js");
 
-// Create and Save a new FineSchedule
-exports.create = async (req, res) => {
-  function validateLoad(item) {
-    if (!item.EmployeeID) return false;
+// Create and Save a new BasicSchedule
+exports.create = (req, res) => {
+ function validateLoad(item) {
     if (!item.Amount) return false;
     if (!item.Time) return false;
-    if (!item.Description) return false;
     return true;
   }
   console.log('got it', req.body);
@@ -19,11 +16,11 @@ exports.create = async (req, res) => {
     error: "",
     message: "",
   };
-  // console.log(FineSchedule);
-  // responseData.data = FineSchedule;
+  // console.log(BasicSchedule);
+  // responseData.data = BasicSchedule;
   // return res.json(responseData);
 
-
+ 
   // Validate request
   let validateRes = validateLoad(req.body);
   if (validateRes == false) {
@@ -31,21 +28,20 @@ exports.create = async (req, res) => {
     responseData.message = "Content can not be empty!";
     return res.json(responseData);
   } else {
-    // Create a fineSchedule
-    const ID = req.body.EmployeeID;
-    const user = await searchUserByID(ID);
-    console.log('user',user);
-    const fineScheduleData = new FineSchedule({
+
+
+    // Create a BasicSchedule
+    const BasicScheduleData = new BasicSchedule({
       Amount: req.body.Amount,
       Description: req.body.Description,
       Time: req.body.Time,
-      Employee: user.id
+    
     });
 
-    console.log('fineScheduleData', fineScheduleData);
-    // Save fineScheduleData in the database
-    fineScheduleData
-      .save(fineScheduleData)
+    console.log('BasicScheduleData',BasicScheduleData);
+    // Save BasicScheduleData in the database
+    BasicScheduleData
+      .save(BasicScheduleData)
       .then(data => {
         responseData.status = 200;
         responseData.message = "创建成功";
@@ -55,48 +51,52 @@ exports.create = async (req, res) => {
       .catch(err => {
         responseData.status = 500;
         responseData.message = "创建失败";
-        responseData.error = err.message || "Some error occurred while creating the fineSchedule.";
+        responseData.error = err.message || "Some error occurred while creating the BasicSchedule.";
+        // res.status(500).send({
+        //   message:
+        //     err.message || "Some error occurred while creating the BasicSchedule."
+        // });
         return res.json(responseData)
       });
   }
 
 };
 
-// Retrieve all fineSchedules from the database.
+// Retrieve all BasicSchedules from the database.
 exports.findAll = (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  fineSchedule.find(condition)
+  BasicSchedule.find(condition)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving fineSchedules."
+          err.message || "Some error occurred while retrieving BasicSchedules."
       });
     });
 };
 
-// Find a single fineSchedule with an id
+// Find a single BasicSchedule with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  fineSchedule.findById(id)
+  BasicSchedule.findById(id)
     .then(data => {
       if (!data)
-        res.status(404).send({ message: "Not found fineSchedule with id " + id });
+        res.status(404).send({ message: "Not found BasicSchedule with id " + id });
       else res.send(data);
     })
     .catch(err => {
       res
         .status(500)
-        .send({ message: "Error retrieving fineSchedule with id=" + id });
+        .send({ message: "Error retrieving BasicSchedule with id=" + id });
     });
 };
 
-// Update a fineSchedule by the id in the request
+// Update a BasicSchedule by the id in the request
 exports.update = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
@@ -106,70 +106,70 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  fineSchedule.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  BasicSchedule.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update fineSchedule with id=${id}. Maybe fineSchedule was not found!`
+          message: `Cannot update BasicSchedule with id=${id}. Maybe BasicSchedule was not found!`
         });
-      } else res.send({ message: "fineSchedule was updated successfully." });
+      } else res.send({ message: "BasicSchedule was updated successfully." });
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating fineSchedule with id=" + id
+        message: "Error updating BasicSchedule with id=" + id
       });
     });
 };
 
-// Delete a fineSchedule with the specified id in the request
+// Delete a BasicSchedule with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  fineSchedule.findByIdAndRemove(id, { useFindAndModify: false })
+  BasicSchedule.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete fineSchedule with id=${id}. Maybe fineSchedule was not found!`
+          message: `Cannot delete BasicSchedule with id=${id}. Maybe BasicSchedule was not found!`
         });
       } else {
         res.send({
-          message: "fineSchedule was deleted successfully!"
+          message: "BasicSchedule was deleted successfully!"
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete fineSchedule with id=" + id
+        message: "Could not delete BasicSchedule with id=" + id
       });
     });
 };
 
-// Delete all fineSchedules from the database.
+// Delete all BasicSchedules from the database.
 exports.deleteAll = (req, res) => {
-  fineSchedule.deleteMany({})
+  BasicSchedule.deleteMany({})
     .then(data => {
       res.send({
-        message: `${data.deletedCount} fineSchedules were deleted successfully!`
+        message: `${data.deletedCount} BasicSchedules were deleted successfully!`
       });
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all fineSchedules."
+          err.message || "Some error occurred while removing all BasicSchedules."
       });
     });
 };
 
-// Find all published fineSchedules
+// Find all published BasicSchedules
 exports.findAllPublished = (req, res) => {
-  fineSchedule.find({ published: true })
+  BasicSchedule.find({ published: true })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving fineSchedules."
+          err.message || "Some error occurred while retrieving BasicSchedules."
       });
     });
 };

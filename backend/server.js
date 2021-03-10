@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 const {LOCAL_CONFI,ONLINE_CONFI}=require("./app/config/db.config.js")
-db.mongoose.connect(ONLINE_CONFI, {
+db.mongoose.connect(LOCAL_CONFI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }); 
@@ -31,7 +31,11 @@ app.get("/", (req, res) => {
 require("./app/routes/turorial.routes")(app);
 require("./app/routes/rewardSchedule.routes")(app);
 require("./app/routes/fineSchedule.routes")(app);
+require("./app/routes/basicSchedule.routes")(app);
+
 require("./app/routes/auth.routes")(app);
+require("./app/routes/employee.routes")(app);
+
 
 
 
