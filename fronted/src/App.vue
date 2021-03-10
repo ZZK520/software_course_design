@@ -19,7 +19,12 @@
         <li class="nav-item">
           <router-link to="/addFine" class="nav-link">Add Fine</router-link>
         </li>
-        
+          <li class="nav-item">
+          <router-link to="/addBasicSchedule" class="nav-link">Add BasicSchedule</router-link>
+        </li>
+         <li class="nav-item">
+          <router-link to="/employeeList" class="nav-link">EmployeeList</router-link>
+        </li>
       </div>
     </nav>
 

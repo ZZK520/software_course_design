@@ -9,8 +9,8 @@ const baseUrl={
 }
 
 let http = axios.create({
-  // baseURL: baseUrl.local,
-  baseURL: baseUrl.online,
+  baseURL: baseUrl.local,
+  // baseURL: baseUrl.online,
 
   headers: {
     "Content-type": "application/json"

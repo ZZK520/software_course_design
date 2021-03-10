@@ -2,8 +2,16 @@ import http from "../http-common";
 import authHeader from './auth-header';
 
 class EmployeeDataService {
-  getAll() {
-    return http.get("/employees",{ headers: authHeader() });
+  getAll(cond) {
+    return http.get("/employees", {
+      params: 
+      // {
+      //   username: 'admin',
+      //   password: '123456'
+      // }, 
+      cond,
+      headers: authHeader()
+    });
   }
 
   get(id) {
