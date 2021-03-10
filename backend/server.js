@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
@@ -12,30 +11,17 @@ const app = express();
 app.use(cors());
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 const {LOCAL_CONFI,ONLINE_CONFI}=require("./app/config/db.config.js")
-db.mongoose.connect(ONLINE_CONFI, {
+db.mongoose.connect(LOCAL_CONFI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }); 
-
-// db.mongoose
-//   .connect(db.url, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-//   })
-//   .then(() => {
-//     console.log("Connected to the database!");
-//   })
-//   .catch(err => {
-//     console.log("Cannot connect to the database!", err);
-//     process.exit();
-//   });
 
 // simple route
 app.get("/", (req, res) => {
@@ -43,6 +29,12 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/turorial.routes")(app);
+require("./app/routes/rewardSchedule.routes")(app);
+require("./app/routes/fineSchedule.routes")(app);
+require("./app/routes/auth.routes")(app);
+
+
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 7080;
