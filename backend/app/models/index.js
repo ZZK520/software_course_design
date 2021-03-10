@@ -7,5 +7,10 @@ const db = {};
 db.mongoose = mongoose;
 // db.url = dbConfig.url;
 db.tutorials = require("./tutorial.model.js")(mongoose);
+db.rewardSchedules = require("./rewardSchedule.model.js")(mongoose);
+db.fineSchedules = require("./fineSchedule.model.js")(mongoose);
+db.employees = require("./employee.model.js")(mongoose);
+
+
 
 module.exports = db;
