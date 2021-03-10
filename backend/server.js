@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 const {LOCAL_CONFI,ONLINE_CONFI}=require("./app/config/db.config.js")
-db.mongoose.connect(LOCAL_CONFI, {
+db.mongoose.connect(ONLINE_CONFI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }); 
