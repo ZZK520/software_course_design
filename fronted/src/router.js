@@ -21,6 +21,21 @@ export default new Router({
       path: "/add",
       name: "add",
       component: () => import("./components/AddTutorial")
+    },
+    {
+      path: "/addReward",
+      name: "addReward",
+      component: () => import("./components/reward/AddReward")
+    },
+    {
+      path: "/findReward",
+      name: "findReward",
+      component: () => import("./components/reward/FindReward")
+    },
+    {
+      path: "/addFine",
+      name: "addFine",
+      component: () => import("./components/AddFine")
     }
   ]
 });

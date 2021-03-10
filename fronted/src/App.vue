@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
+
+     <nav class="navbar navbar-expand navbar-dark bg-dark">
       <router-link to="/" class="navbar-brand">bezKoder</router-link>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -9,17 +10,30 @@
         <li class="nav-item">
           <router-link to="/add" class="nav-link">Add</router-link>
         </li>
+         <li class="nav-item">
+          <router-link to="/addReward" class="nav-link">Add Reward</router-link>
+        </li>
+         <li class="nav-item">
+          <router-link to="/findReward" class="nav-link">Find Reward</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/addFine" class="nav-link">Add Fine</router-link>
+        </li>
+        
       </div>
     </nav>
 
-    <div class="container mt-3">
-      <router-view />
-    </div>
+    <router-view />
+<login></login>
   </div>
 </template>
 
 <script>
+import Login from './components/Login.vue';
 export default {
-  name: "app"
+  name: "app",
+  components:{
+    Login
+  }
 };
 </script>
