@@ -1,10 +1,9 @@
 const db = require("../models");
-const RewardSchedule = db.rewardSchedules;
+const Employee = db.employees;
 const dayjs = require('dayjs');
-const { searchUserByID } = require("../tools/search.js");
 
-// Create and Save a new RewardSchedule
-exports.create = async(req, res) => {
+// Create and Save a new Employee
+exports.create = (req, res) => {
 
   console.log('got it', req.body);
   const responseData = {
@@ -13,8 +12,8 @@ exports.create = async(req, res) => {
     error: "",
     message: "",
   };
-  // console.log(RewardSchedule);
-  // responseData.data = RewardSchedule;
+  // console.log(Employee);
+  // responseData.data = Employee;
   // return res.json(responseData);
 
 
@@ -26,21 +25,19 @@ exports.create = async(req, res) => {
     return res.json(responseData);
   } else {
 
-    // Create a fineSchedule
-    const ID = req.body.EmployeeID;
-    const user = await searchUserByID(ID);
-    console.log('user', user);
-    const RewardScheduleData = new RewardSchedule({
+
+    // Create a Employee
+    const EmployeeData = new Employee({
       Amount: req.body.Amount,
       Description: req.body.Description,
       Time: req.body.Time,
-      Employee: user.id
+
     });
 
-    console.log('RewardScheduleData', RewardScheduleData);
-    // Save RewardSchedule in the database
-    RewardScheduleData
-      .save(RewardScheduleData)
+    console.log('EmployeeData', EmployeeData);
+    // Save Employee in the database
+    EmployeeData
+      .save(EmployeeData)
       .then(data => {
         responseData.status = 200;
         responseData.message = "创建成功";
@@ -50,10 +47,10 @@ exports.create = async(req, res) => {
       .catch(err => {
         responseData.status = 500;
         responseData.message = "创建失败";
-        responseData.error = err.message || "Some error occurred while creating the RewardSchedule.";
+        responseData.error = err.message || "Some error occurred while creating the Employee.";
         // res.status(500).send({
         //   message:
-        //     err.message || "Some error occurred while creating the RewardSchedule."
+        //     err.message || "Some error occurred while creating the Employee."
         // });
         return res.json(responseData)
       });
@@ -61,7 +58,7 @@ exports.create = async(req, res) => {
 
 };
 
-// Retrieve all RewardSchedules from the database.
+// Retrieve all Employees from the database.
 exports.findAll = async (req, res) => {
   const responseData = {
     status: 200,
@@ -71,11 +68,8 @@ exports.findAll = async (req, res) => {
   };
   // console.log('req.query', req.query);
   const time = req.query.Time;
-  // const ID = req.query.EmployeeID;
-  // const user = await searchUserByID(ID);
-  // console.log('user', user);
   try {
-    let data = await filterByTime(RewardSchedule, time);
+    let data = await filterByTime(Employee, time);
     console.log('data', data);
     responseData.data = data
   } catch (error) {
@@ -88,36 +82,36 @@ exports.findAll = async (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  RewardSchedule.find(condition)
+  Employee.find(condition)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving RewardSchedules."
+          err.message || "Some error occurred while retrieving Employees."
       });
     });
 };
 
-// Find a single RewardSchedule with an id
+// Find a single Employee with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  RewardSchedule.findById(id)
+  Employee.findById(id)
     .then(data => {
       if (!data)
-        res.status(404).send({ message: "Not found RewardSchedule with id " + id });
+        res.status(404).send({ message: "Not found Employee with id " + id });
       else res.send(data);
     })
     .catch(err => {
       res
         .status(500)
-        .send({ message: "Error retrieving RewardSchedule with id=" + id });
+        .send({ message: "Error retrieving Employee with id=" + id });
     });
 };
 
-// Update a RewardSchedule by the id in the request
+// Update a Employee by the id in the request
 exports.update = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
@@ -127,70 +121,70 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  RewardSchedule.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  Employee.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update RewardSchedule with id=${id}. Maybe RewardSchedule was not found!`
+          message: `Cannot update Employee with id=${id}. Maybe Employee was not found!`
         });
-      } else res.send({ message: "RewardSchedule was updated successfully." });
+      } else res.send({ message: "Employee was updated successfully." });
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating RewardSchedule with id=" + id
+        message: "Error updating Employee with id=" + id
       });
     });
 };
 
-// Delete a RewardSchedule with the specified id in the request
+// Delete a Employee with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  RewardSchedule.findByIdAndRemove(id, { useFindAndModify: false })
+  Employee.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete RewardSchedule with id=${id}. Maybe RewardSchedule was not found!`
+          message: `Cannot delete Employee with id=${id}. Maybe Employee was not found!`
         });
       } else {
         res.send({
-          message: "RewardSchedule was deleted successfully!"
+          message: "Employee was deleted successfully!"
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete RewardSchedule with id=" + id
+        message: "Could not delete Employee with id=" + id
       });
     });
 };
 
-// Delete all RewardSchedules from the database.
+// Delete all Employees from the database.
 exports.deleteAll = (req, res) => {
-  RewardSchedule.deleteMany({})
+  Employee.deleteMany({})
     .then(data => {
       res.send({
-        message: `${data.deletedCount} RewardSchedules were deleted successfully!`
+        message: `${data.deletedCount} Employees were deleted successfully!`
       });
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all RewardSchedules."
+          err.message || "Some error occurred while removing all Employees."
       });
     });
 };
 
-// Find all published RewardSchedules
+// Find all published Employees
 exports.findAllPublished = (req, res) => {
-  RewardSchedule.find({ published: true })
+  Employee.find({ published: true })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving RewardSchedules."
+          err.message || "Some error occurred while retrieving Employees."
       });
     });
 };
@@ -204,14 +198,13 @@ function validateLoad(item) {
 function filterByTime(Model, time) {
   //-1降序，1升序
   console.log('filterByTime time', time);
- 
   let cond = { Time: { $lte: time } };
   if(!time){
     cond = { };
   }
   return new Promise(function (resolve, reject) {
     Model.find(cond).
-      populate('Employee',{"Name":1,"ID":1}).
+      populate('Employee').
       exec(function (err, data) {
         if (err) {
           reject(err);
