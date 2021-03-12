@@ -118,10 +118,17 @@ exports.findOne = (req, res) => {
 
 // Update a BasicSchedule by the id in the request
 exports.update = (req, res) => {
+  const responseData = {
+    status: 200,
+    data: {},
+    error: "",
+    message: "",
+  };
+
   if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
-    });
+    responseData.status = 400;
+    responseData.message = "Data to update can not be empty!";
+    return res.json(responseData);
   }
 
   const id = req.params.id;
@@ -129,15 +136,19 @@ exports.update = (req, res) => {
   BasicSchedule.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
-        res.status(404).send({
-          message: `Cannot update BasicSchedule with id=${id}. Maybe BasicSchedule was not found!`
-        });
-      } else res.send({ message: "BasicSchedule was updated successfully." });
+        responseData.status = 404;
+        responseData.message = `Cannot update BasicSchedule with id=${id}. Maybe fineSchedule was not found!`;
+        return res.json(responseData);
+      } else {
+        responseData.message = "BasicSchedule was updated successfully."
+        return res.json(responseData);
+      }
     })
     .catch(err => {
-      res.status(500).send({
-        message: "Error updating BasicSchedule with id=" + id
-      });
+      responseData.message = "Error updating BasicSchedule with id=" + id;
+      res.status = 500;
+      res.error = err;
+      return res.json(responseData);
     });
 };
 
@@ -223,15 +234,14 @@ function filterByTime(Model, time, exact_mode) {
         }
         let final=data;
         if (exact_mode == 1) {
-        console.log('final 1',final);
+        // console.log('final 1',final);
 
           final=data.filter(item => {
             console.log('item.Time',item.Time);
             console.log('time',time);
             return item.Time ==time;
           })
-        console.log('final 2',final);
-
+        // console.log('final 2',final);
         }
         resolve(final);
       })

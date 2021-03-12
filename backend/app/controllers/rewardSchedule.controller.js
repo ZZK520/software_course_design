@@ -238,12 +238,18 @@ function filterByTime(Model, time, exact_mode) {
           console.log('err', err);
           reject(err);
         }
-        console.log('data', data);
-        if(exact_mode==1){
-          data.filter(item => {
-            item.Time == time;
+        let final=data;
+        if (exact_mode == 1) {
+        // console.log('final 1',final);
+
+          final=data.filter(item => {
+            console.log('item.Time',item.Time);
+            console.log('time',time);
+            return item.Time ==time;
           })
+        // console.log('final 2',final);
         }
+        resolve(final);
    
         resolve(data);
       })
