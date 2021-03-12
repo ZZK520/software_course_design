@@ -10,15 +10,14 @@ module.exports = mongoose => {
             },
        
         Amount:{ type: Number ,required:true},//数据库中 就截断成3位小数
-        Time:{type:Date,required:true},//存储的时候按照 年/月 格式就行了
+        Time:{type:String,required:true},//存储的时候按照 年/月 格式就行了
         Description:{type:String,required:true,max:100}
       },
     );
   
     schema.method("toJSON", function() {
-      const { __v, _id,Time, ...object } = this.toObject();
+      const { __v, _id,...object } = this.toObject();
       object.id = _id;
-      object.Time=dayjs(object.Time).format('MM/YYYY');
       return object;
     });
   

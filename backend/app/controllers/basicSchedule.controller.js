@@ -1,10 +1,11 @@
 const db = require("../models");
 const BasicSchedule = db.basicSchedules;
+const { searchUserByID } = require("../tools/search.js");
 
 
 // Create and Save a new BasicSchedule
-exports.create = (req, res) => {
- function validateLoad(item) {
+exports.create = async (req, res) => {
+  function validateLoad(item) {
     if (!item.Amount) return false;
     if (!item.Time) return false;
     return true;
@@ -20,7 +21,7 @@ exports.create = (req, res) => {
   // responseData.data = BasicSchedule;
   // return res.json(responseData);
 
- 
+
   // Validate request
   let validateRes = validateLoad(req.body);
   if (validateRes == false) {
@@ -29,54 +30,71 @@ exports.create = (req, res) => {
     return res.json(responseData);
   } else {
 
-
-    // Create a BasicSchedule
-    const BasicScheduleData = new BasicSchedule({
-      Amount: req.body.Amount,
-      Description: req.body.Description,
-      Time: req.body.Time,
-    
-    });
-
-    console.log('BasicScheduleData',BasicScheduleData);
-    // Save BasicScheduleData in the database
-    BasicScheduleData
-      .save(BasicScheduleData)
-      .then(data => {
-        responseData.status = 200;
-        responseData.message = "创建成功";
-        responseData.data = data;
-        return res.json(responseData);
-      })
-      .catch(err => {
-        responseData.status = 500;
-        responseData.message = "创建失败";
-        responseData.error = err.message || "Some error occurred while creating the BasicSchedule.";
-        // res.status(500).send({
-        //   message:
-        //     err.message || "Some error occurred while creating the BasicSchedule."
-        // });
-        return res.json(responseData)
+    const ID = req.body.EmployeeID;
+    try {
+      const user = await searchUserByID(ID);
+      // Create a BasicSchedule
+      const BasicScheduleData = new BasicSchedule({
+        Amount: req.body.Amount,
+        Time: req.body.Time,
+        Employee: user.id
       });
+
+      console.log('BasicScheduleData', BasicScheduleData);
+      // Save BasicScheduleData in the database
+      BasicScheduleData
+        .save(BasicScheduleData)
+        .then(data => {
+          responseData.status = 200;
+          responseData.message = "创建成功";
+          responseData.data = data;
+          return res.json(responseData);
+        })
+        .catch(err => {
+          responseData.status = 500;
+          responseData.message = "创建失败，请检查输入信息";
+          responseData.error = err;
+          return res.json(responseData)
+        });
+    } catch (error) {
+      responseData.status = 500;
+      responseData.message = "创建失败，请检查输入信息";
+      responseData.error = error.message || "Some error occurred while creating the BasicSchedule.";
+      return res.json(responseData);
+    }
+
   }
 
 };
 
 // Retrieve all BasicSchedules from the database.
-exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+exports.findAll = async (req, res) => {
+  const responseData = {
+    status: 200,
+    data: {},
+    error: "",
+    message: "",
+  };
+  console.log('req.query', req.query);
+  const time = req.query.Time;
+  const ID = req.query.EmployeeID;
+  const user = await searchUserByID(ID);
+  let exact_mode = 0;
+  if (req.query.tag == "exact") {
+    exact_mode = 1;
+  }
+  console.log('user', user);
+  try {
+    let data = await filterByTime(BasicSchedule, time,exact_mode);
+    data = data.filter(item=>item.Employee.ID==ID);
+    console.log('data', data);
+    responseData.data = data
+  } catch (error) {
+    responseData.error = error
+  } finally {
+    return res.json(responseData);
 
-  BasicSchedule.find(condition)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving BasicSchedules."
-      });
-    });
+  }
 };
 
 // Find a single BasicSchedule with an id
@@ -173,3 +191,31 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+function filterByTime(Model, time,exact_mode) {
+  //-1降序，1升序
+  console.log('filterByTime time', time);
+ 
+  let cond = { Time: { $lte: time } };
+  if(!time){
+    cond = { };
+  }
+  if (exact_mode == 1) {//精准匹配
+    // 具体时间-某个月
+    cond = {};//所有时间
+  }
+  return new Promise(function (resolve, reject) {
+    Model.find(cond).
+      populate('Employee',{"Name":1,"ID":1}).
+      exec(function (err, data) {
+        if (err) {
+          console.log('err',err);
+          reject(err);
+        }
+        data.filter(item=>{
+          item.Time=time;
+        })
+        resolve(data);
+      })
+  })
+}

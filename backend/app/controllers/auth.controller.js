@@ -47,10 +47,11 @@ exports.signin = async (req, res) => {
 
         }
         else {
-
-          const token = getToken(user.ID);
+          const token = getToken(user);
           const result = {
             accessToken: token,
+            ID:user.ID,
+            IsAccountant:user.IsAccountant
           };
           responseData.status = 200;
           responseData.data = result;
