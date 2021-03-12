@@ -2,10 +2,10 @@ import http from "../http-common";
 import authHeader from './auth-header';
 
 
-class RewardDataService {
+class BasicDataService {
   getAll(cond) {
     console.log('cond', cond);
-    return http.get("/rewardSchedule",
+    return http.get("/basicSchedule",
       {
         params: 
         // {
@@ -20,13 +20,13 @@ class RewardDataService {
   }
 
   create(data) {
-    return http.post("/rewardSchedule", data);
+    return http.post("/basicSchedule", data);
   }
 
   update(id, data) {
-    return http.put(`/rewardSchedule/${id}`, data);
+    return http.put(`/basicSchedule/${id}`, data);
   }
 
 }
 
-export default new RewardDataService();
+export default new BasicDataService();

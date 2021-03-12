@@ -43,7 +43,6 @@
 </template>
 
 <script>
-// import http from "../http-common";
 export default {
   name: "Login",
   data() {
@@ -89,7 +88,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/addFine');
+      this.$router.push('/employeeList');
     }
   },
   methods: {
@@ -101,7 +100,7 @@ export default {
           try {
           this.$store.dispatch('auth/login', this.form).then(
             () => {
-              this.$router.push('/addFine');
+              this.$router.push('/employeeList');
             },
             error => {
               let message =

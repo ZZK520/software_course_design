@@ -18,10 +18,7 @@ class FineDataService {
     );
   }
 
-  get(id) {
-    return http.get(`/fineSchedule/${id}`);
-  }
-
+ 
   create(data) {
     return http.post("/fineSchedule", data);
   }
@@ -30,17 +27,7 @@ class FineDataService {
     return http.put(`/fineSchedule/${id}`, data);
   }
 
-  delete(id) {
-    return http.delete(`/fineSchedule/${id}`);
-  }
-
-  deleteAll() {
-    return http.delete(`/fineSchedule`);
-  }
-
-  findByTitle(title) {
-    return http.get(`/fineSchedule?title=${title}`);
-  }
+  
 }
 
 export default new FineDataService();
