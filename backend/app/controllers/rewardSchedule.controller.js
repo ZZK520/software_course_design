@@ -146,21 +146,36 @@ exports.update = (req, res) => {
 
 // Delete a RewardSchedule with the specified id in the request
 exports.delete = (req, res) => {
+  const responseData = {
+    status: 200,
+    data: {},
+    error: "",
+    message: "",
+  };
   const id = req.params.id;
 
   RewardSchedule.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {
       if (!data) {
+        responseData.status = 404;
+        responseData.message = `Cannot delete RewardSchedule with id=${id}. Maybe RewardSchedule was not found!`
+        return res.json(responseData)
         res.status(404).send({
           message: `Cannot delete RewardSchedule with id=${id}. Maybe RewardSchedule was not found!`
         });
       } else {
+        responseData.message = "RewardSchedule was deleted successfully!"
+        return res.json(responseData);
         res.send({
           message: "RewardSchedule was deleted successfully!"
         });
       }
     })
     .catch(err => {
+      responseData.err = err;
+      responseData.status = 500;
+      responseData.message = "Could not delete RewardSchedule with id=" + id
+      return res.json(responseData)
       res.status(500).send({
         message: "Could not delete RewardSchedule with id=" + id
       });
@@ -194,16 +209,7 @@ exports.findSameTime = (req, res) => {
   console.log('req.query', req.query);
   responseData.data = req.query;
   return res.json(responseData);
-  RewardSchedule.find({ published: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving RewardSchedules."
-      });
-    });
+
 };
 
 function validateLoad(item) {
@@ -232,10 +238,13 @@ function filterByTime(Model, time, exact_mode) {
           console.log('err', err);
           reject(err);
         }
-        console.log('data',data);
-        data.filter(item=>{
-          item.Time=time;
-        })
+        console.log('data', data);
+        if(exact_mode==1){
+          data.filter(item => {
+            item.Time == time;
+          })
+        }
+   
         resolve(data);
       })
   })

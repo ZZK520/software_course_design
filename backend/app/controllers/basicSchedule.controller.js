@@ -75,19 +75,21 @@ exports.findAll = async (req, res) => {
     error: "",
     message: "",
   };
-  console.log('req.query', req.query);
+  console.log('req.query basicSchedule', req.query);
   const time = req.query.Time;
   const ID = req.query.EmployeeID;
-  const user = await searchUserByID(ID);
+  // const user = await searchUserByID(ID);
   let exact_mode = 0;
   if (req.query.tag == "exact") {
     exact_mode = 1;
   }
-  console.log('user', user);
+  // console.log('user', user);
   try {
-    let data = await filterByTime(BasicSchedule, time,exact_mode);
-    data = data.filter(item=>item.Employee.ID==ID);
-    console.log('data', data);
+    let data = await filterByTime(BasicSchedule, time, exact_mode);
+    console.log(' req.query basicSchedule data', data);
+    
+    data = data.filter(item => item.Employee.ID == ID);
+    // console.log('data', data);
     responseData.data = data
   } catch (error) {
     responseData.error = error
@@ -141,24 +143,31 @@ exports.update = (req, res) => {
 
 // Delete a BasicSchedule with the specified id in the request
 exports.delete = (req, res) => {
+  const responseData = {
+    status: 200,
+    data: {},
+    error: "",
+    message: "",
+  };
   const id = req.params.id;
 
   BasicSchedule.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {
       if (!data) {
-        res.status(404).send({
-          message: `Cannot delete BasicSchedule with id=${id}. Maybe BasicSchedule was not found!`
-        });
+        responseData.status = 404;
+        responseData.message = `Cannot delete BasicSchedule with id=${id}. Maybe BasicSchedule was not found!`
+        return res.json(responseData);
       } else {
-        res.send({
-          message: "BasicSchedule was deleted successfully!"
-        });
+        responseData.message = "BasicSchedule was deleted successfully!"
+        return res.json(responseData);
       }
     })
     .catch(err => {
-      res.status(500).send({
-        message: "Could not delete BasicSchedule with id=" + id
-      });
+      responseData.message = "Error updating fineSchedule with id=" + id;
+      res.status = 500;
+      res.error = err;
+      return res.json(responseData);
+    
     });
 };
 
@@ -192,13 +201,13 @@ exports.findAllPublished = (req, res) => {
     });
 };
 
-function filterByTime(Model, time,exact_mode) {
+function filterByTime(Model, time, exact_mode) {
   //-1降序，1升序
-  console.log('filterByTime time', time);
- 
+  console.log('filterByTime time basciSchedule', time);
+
   let cond = { Time: { $lte: time } };
-  if(!time){
-    cond = { };
+  if (!time) {
+    cond = {};
   }
   if (exact_mode == 1) {//精准匹配
     // 具体时间-某个月
@@ -206,16 +215,25 @@ function filterByTime(Model, time,exact_mode) {
   }
   return new Promise(function (resolve, reject) {
     Model.find(cond).
-      populate('Employee',{"Name":1,"ID":1}).
+      populate('Employee', { "Name": 1, "ID": 1 }).
       exec(function (err, data) {
         if (err) {
-          console.log('err',err);
+          console.log('err', err);
           reject(err);
         }
-        data.filter(item=>{
-          item.Time=time;
-        })
-        resolve(data);
+        let final=data;
+        if (exact_mode == 1) {
+        console.log('final 1',final);
+
+          final=data.filter(item => {
+            console.log('item.Time',item.Time);
+            console.log('time',time);
+            return item.Time ==time;
+          })
+        console.log('final 2',final);
+
+        }
+        resolve(final);
       })
   })
 }

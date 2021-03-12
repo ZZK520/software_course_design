@@ -1,4 +1,3 @@
-const dayjs = require("dayjs");
 
 module.exports = mongoose => {
     var schema = mongoose.Schema(

@@ -80,8 +80,8 @@ exports.findAll = async (req, res) => {
   }
   console.log('user', user);
   try {
-    let data = await filterByTime(FineSchedule, time,exact_mode);
-    data = data.filter(item=>item.Employee.ID==ID);
+    let data = await filterByTime(FineSchedule, time, exact_mode);
+    data = data.filter(item => item.Employee.ID == ID);
     console.log('data', data);
     responseData.data = data
   } catch (error) {
@@ -159,7 +159,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  fineSchedule.findByIdAndRemove(id, { useFindAndModify: false })
+  FineSchedule.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -207,13 +207,13 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
-function filterByTime(Model, time,exact_mode) {
+function filterByTime(Model, time, exact_mode) {
   //-1降序，1升序
   console.log('filterByTime time', time);
- 
+
   let cond = { Time: { $lte: time } };
-  if(!time){
-    cond = { };
+  if (!time) {
+    cond = {};
   }
   if (exact_mode == 1) {//精准匹配
     // 具体时间-某个月
@@ -221,15 +221,16 @@ function filterByTime(Model, time,exact_mode) {
   }
   return new Promise(function (resolve, reject) {
     Model.find(cond).
-      populate('Employee',{"Name":1,"ID":1}).
+      populate('Employee', { "Name": 1, "ID": 1 }).
       exec(function (err, data) {
         if (err) {
-          console.log('err',err);
+          console.log('err', err);
           reject(err);
         }
-        data.filter(item=>{
-          item.Time=time;
-        })
+        if(exact_mode==1){
+        data.filter(item => {
+          item.Time == time;
+        })}
         resolve(data);
       })
   })
