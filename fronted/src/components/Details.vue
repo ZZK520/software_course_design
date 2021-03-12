@@ -134,6 +134,11 @@ export default {
   },
   methods: {
     async findTotal() {
+      for (const key in this.totalTableData[0]) {
+        if (Object.hasOwnProperty.call(this.totalTableData[0], key)) {
+          this.totalTableData[0][key] = 0;
+        }
+      }
       let valid = this.checkValid();
       console.log("valid", valid);
       if (valid == false) {
@@ -143,15 +148,7 @@ export default {
       await this.findReward();
       await this.findFine();
       await this.findBasic();
-      // this.calcFinal();
     },
-    // calcFinal() {
-    //   let data = this.totalTableData[0];
-    //   console.log(data[0]);
-    //   console.log(data[1]);
-    //   console.log(data[2]);
-    //   this.totalTableData[0].final = -1 * data[0] + data[1] + data[2];
-    // },
     findBasic() {
       let load = {};
       let Time = dayjs(this.load.Time).format("MM/YYYY");
@@ -168,7 +165,6 @@ export default {
           response.data.data.forEach((item) => {
             this.totalTableData[0].basic += item.Amount;
             this.totalTableData[0].final += item.Amount;
-
           });
         })
         .catch((e) => {
@@ -276,32 +272,6 @@ export default {
       console.log(index, row);
       // console.log("row", row);
       this.$router.push({ path: "/editBasic", query: row });
-    },
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = "总价";
-          return;
-        }
-        const values = data.map((item) => Number(item[column.property]));
-        if (!values.every((value) => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
-            }
-          }, 0);
-          sums[index] += " 元";
-        } else {
-          sums[index] = "N/A";
-        }
-      });
-
-      return sums;
     },
   },
   async mounted() {

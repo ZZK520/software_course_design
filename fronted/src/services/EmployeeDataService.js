@@ -13,11 +13,9 @@ class EmployeeDataService {
       headers: authHeader()
     });
   }
-  
   create(data) {
     return http.post("/employees", data);
   }
-
   update(id, data) {
     return http.put(`/employees/${id}`, data);
   }

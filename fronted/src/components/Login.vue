@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
+
 export default {
   name: "Login",
   data() {
@@ -84,11 +86,11 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/employeeList');
+      this.$router.push("/employeeList");
     }
   },
   methods: {
@@ -98,28 +100,26 @@ export default {
         if (valid) {
           console.log("valid", valid);
           try {
-          this.$store.dispatch('auth/login', this.form).then(
-            () => {
-              this.$router.push('/employeeList');
-            },
-            error => {
-              let message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-                console.log('message',message);
-            }
-          );
+            this.$store.dispatch("auth/login", this.form).then((data) => {
+              console.log("data", data);
+              if (data.status == 200) {
+                this.$router.push("/employeeList");
+              } else {
+                Message.error({
+                  message: data.message,
+                });
+              }
+            });
           } catch (error) {
-           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log(error);
-          }
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log(error);
+            }
           }
         }
       });

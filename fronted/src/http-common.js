@@ -5,11 +5,14 @@ import {Message} from 'element-ui'
 
 const baseUrl={
   online:'http://106.13.182.155:7080/api',
+  lan:'http://192.168.43.116:7080/api',
+
   local:'http://localhost:7080/api'
 }
 
 let http = axios.create({
   baseURL: baseUrl.local,
+  // baseURL: baseUrl.lan,
   // baseURL: baseUrl.online,
 
   headers: {
