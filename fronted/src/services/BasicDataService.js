@@ -26,6 +26,9 @@ class BasicDataService {
   update(id, data) {
     return http.put(`/basicSchedule/${id}`, data);
   }
+  delete(id) {
+    return http.delete(`/basicSchedule/${id}`);
+  }
 
 }
 

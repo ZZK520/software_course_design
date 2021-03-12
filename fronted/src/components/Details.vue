@@ -35,7 +35,7 @@
           <el-button
             size="mini"
             type="primary"
-            @click="handleCheckDetail_fine(scope.$index, scope.row)"
+            @click="handleCheckDetail_basic(scope.$index, scope.row)"
             >查看详情</el-button
           >
         </template>

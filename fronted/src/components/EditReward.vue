@@ -58,9 +58,9 @@
         ></el-input
       ></el-col> -->
       <el-col :span="6">
-        <el-tag type="success">奖励金额</el-tag>
+        <el-tag type="success" >奖励金额</el-tag>
 
-        <el-input
+        <el-input :disabled="!isAdmin"
           v-model="load.Amount"
           placeholder="请输入内容"
           type="number"
@@ -89,7 +89,7 @@
         </el-select>
       </el-col> -->
       <el-col :span="6">
-        <el-select v-model="load.Description" placeholder="请选择">
+        <el-select v-model="load.Description" placeholder="请选择" :disabled="!isAdmin">
           <el-option
             v-for="item in reward_options"
             :key="item.value"
@@ -101,7 +101,7 @@
       </el-col>
     </el-row>
 
-    <el-row type="flex" class="row-bg" justify="center">
+    <el-row type="flex" class="row-bg" justify="center" v-if="isAdmin">
       <!-- <el-col :span="6"
         ><el-button @click="editFine" type="danger"
           >点我修改罚款</el-button
@@ -110,6 +110,11 @@
       <el-col :span="6"
         ><el-button @click="editReward" type="success"
           >点我修改奖励</el-button
+        ></el-col
+      >
+      <el-col :span="6"
+        ><el-button @click="deleteReward" type="warning"
+          >点我删除奖励</el-button
         ></el-col
       >
     </el-row>
@@ -141,15 +146,24 @@ export default {
       ],
     };
   },
-  computed: {
+ computed: {
     user() {
       return this.$store.state.auth.user;
+    },
+    isAdmin() {
+      if (!this.$store.state.auth.user) {
+        return false;
+      }
+      return (
+        this.$store.state.auth.user.ID == "1800303107" ||
+        this.$store.state.auth.user.IsAccountant == true
+      );
     },
   },
   methods: {
     // 验证输入是否合法
     checkValid() {
-      for (const [key,value] of Object.entries(this.load)) {
+      for (const [key, value] of Object.entries(this.load)) {
         console.log(`${key}: ${value}`);
         if (!value) {
           return false;
@@ -174,6 +188,28 @@ export default {
           Message.success({
             message: "成功修改！",
           });
+        }
+        console.log(res);
+      });
+    },
+    deleteReward() {
+      let res = this.checkValid();
+      if (res == false) {
+        return;
+      }
+      console.log(this.load);
+      let id = this.load.id;
+
+      const my_package = {};
+      my_package.Amount = this.load.Amount;
+      my_package.Description = this.load.Description;
+      RewardDataService.delete(id).then((res) => {
+        console.log(res);
+        if (res.data.status == 200) {
+          Message.success({
+            message: "成功修改！",
+          });
+          this.$router.go(-1);
         }
         console.log(res);
       });

@@ -26,6 +26,9 @@ class RewardDataService {
   update(id, data) {
     return http.put(`/rewardSchedule/${id}`, data);
   }
+  delete(id) {
+    return http.delete(`/rewardSchedule/${id}`);
+  }
 
 }
 

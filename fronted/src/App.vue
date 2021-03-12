@@ -19,7 +19,7 @@
           >
         </li>
         <li class="nav-item">
-          <router-link to="/employeeList" class="nav-link" v-if="isAdmin"
+          <router-link to="/employeeList" class="nav-link" 
             >EmployeeList</router-link
           >
         </li>

@@ -70,6 +70,11 @@ export default new Router({
       name: "editFine",
       component: () => import("./components/EditFine")
     },
+    {
+      path: "/editBasic",
+      name: "editBasic",
+      component: () => import("./components/EditBasic")
+    },
     
   ]
 });

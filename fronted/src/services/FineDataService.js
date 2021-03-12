@@ -26,7 +26,9 @@ class FineDataService {
   update(id, data) {
     return http.put(`/fineSchedule/${id}`, data);
   }
-
+  delete(id) {
+    return http.delete(`/fineSchedule/${id}`);
+  }
   
 }
 
