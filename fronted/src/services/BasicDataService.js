@@ -1,10 +1,11 @@
 import http from "../http-common";
 import authHeader from './auth-header';
 
-class FineDataService {
+
+class BasicDataService {
   getAll(cond) {
     console.log('cond', cond);
-    return http.get("/fineSchedule",
+    return http.get("/basicSchedule",
       {
         params: 
         // {
@@ -18,18 +19,17 @@ class FineDataService {
     );
   }
 
- 
   create(data) {
-    return http.post("/fineSchedule", data);
+    return http.post("/basicSchedule", data);
   }
 
   update(id, data) {
-    return http.put(`/fineSchedule/${id}`, data);
+    return http.put(`/basicSchedule/${id}`, data);
   }
   delete(id) {
-    return http.delete(`/fineSchedule/${id}`);
+    return http.delete(`/basicSchedule/${id}`);
   }
-  
+
 }
 
-export default new FineDataService();
+export default new BasicDataService();

@@ -1,6 +1,7 @@
 import http from "../http-common";
 import authHeader from './auth-header';
 
+
 class RewardDataService {
   getAll(cond) {
     console.log('cond', cond);
@@ -18,10 +19,6 @@ class RewardDataService {
     );
   }
 
-  get(id) {
-    return http.get(`/rewardSchedule/${id}`);
-  }
-
   create(data) {
     return http.post("/rewardSchedule", data);
   }
@@ -29,18 +26,10 @@ class RewardDataService {
   update(id, data) {
     return http.put(`/rewardSchedule/${id}`, data);
   }
-
   delete(id) {
     return http.delete(`/rewardSchedule/${id}`);
   }
 
-  deleteAll() {
-    return http.delete(`/rewardSchedule`);
-  }
-
-  findByTitle(title) {
-    return http.get(`/rewardSchedule?title=${title}`);
-  }
 }
 
 export default new RewardDataService();

@@ -55,7 +55,9 @@
 
 <script>
 import dayjs from "dayjs";
-import FineDataService from "../services/FineDataService"
+import FineDataService from "../services/FineDataService";
+import { Message } from "element-ui";
+
 export default {
   name: "addReward",
   data() {
@@ -63,7 +65,7 @@ export default {
       load: {
         Amount: 10,
         Description: "",
-        Time: dayjs(),
+        Time: null,
         EmployeeID: "1800303107",
       },
       options: [
@@ -90,9 +92,9 @@ export default {
   methods: {
     // 验证输入是否合法
     checkValid() {
-      for (const [ value] of Object.entries(this.load)) {
-        // console.log(`${key}: ${value}`);
-        if(!value){
+      for (const [key, value] of Object.entries(this.load)) {
+        console.log(`${key}: ${value}`);
+        if (!value) {
           return false;
         }
       }
@@ -103,12 +105,24 @@ export default {
       if (res == false) {
         return;
       }
-      console.log(this.load);
-      console.log("this.user", this.user);
-      FineDataService.create(this.load).then(res=>{
-        console.log(res);
-      })
-   
+      let load = { Amount: 0, Time: null, EmployeeID: "" };
+      load.Amount = this.load.Amount;
+      load.EmployeeID = this.load.EmployeeID;
+      load.Time = dayjs(this.load.Time).format("MM/YYYY");
+      load.Description = this.load.Description;
+      console.log(load);
+
+      FineDataService.create(load).then((res) => {
+        if (res.data.status == 200) {
+          Message.success({
+            message: "成功录入！",
+          });
+        } else {
+          Message.error({
+            message: res.data.message,
+          });
+        }
+      });
     },
   },
 };

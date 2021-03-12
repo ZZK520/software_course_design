@@ -2,15 +2,18 @@ import Vue from "vue";
 import Router from "vue-router";
 
 Vue.use(Router);
-
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default new Router({
   mode: "history",
   routes: [
     {
       path: "/",
-      alias: "/tutorials",
-      name: "tutorials",
-      component: () => import("./components/TutorialsList")
+      alias: "/login",
+      name: "login",
+      component: () => import("./components/Login")
     },
     {
       path: "/tutorials/:id",
@@ -47,5 +50,31 @@ export default new Router({
       name: "addBasicSchedule",
       component: () => import("./components/AddBasicSchedule")
     },
+    {
+      path: "/details",
+      name: "my_details",
+      component: () => import("./components/Details")
+    },
+    {
+      path: "/editDetails",
+      name: "editDetails",
+      component: () => import("./components/EditDetails")
+    },
+    {
+      path: "/editReward",
+      name: "editReward",
+      component: () => import("./components/EditReward")
+    },
+    {
+      path: "/editFine",
+      name: "editFine",
+      component: () => import("./components/EditFine")
+    },
+    {
+      path: "/editBasic",
+      name: "editBasic",
+      component: () => import("./components/EditBasic")
+    },
+    
   ]
 });

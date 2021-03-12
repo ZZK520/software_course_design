@@ -9,18 +9,16 @@ export const auth = {
   namespaced: true,
   state: initialState,
   actions: {
-    login({ commit }, user) {
-      return AuthService.login(user).then(
-        user => {
-          // console.log('user',user);
-          if(user.status===404){
+    login({ commit }, load) {
+      return AuthService.login(load).then(
+        data => {
+          console.log('data', data);
+          if (data.status == 200) {
+            commit('loginSuccess', data.data);
+          } else {
             commit('loginFailure');
-            return Promise.reject(user.msg);
-          }else{
-            commit('loginSuccess', user);
-            return Promise.resolve(user);
           }
-         
+          return Promise.resolve(data);
         },
         error => {
           commit('loginFailure');
@@ -35,10 +33,13 @@ export const auth = {
   },
   mutations: {
     loginSuccess(state, user) {
+      console.log('loginSuccess');
+
       state.status.loggedIn = true;
       state.user = user;
     },
     loginFailure(state) {
+      console.log('loginFailure');
       state.status.loggedIn = false;
       state.user = null;
     },

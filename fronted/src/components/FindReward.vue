@@ -17,7 +17,7 @@
     </el-row>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6"
-        ><el-button @click="retrieveTutorials">点我查询奖金</el-button></el-col
+        ><el-button @click="retrieveReward">点我查询奖金</el-button></el-col
       >
     </el-row>
     <el-table :data="tableData" style="width: 100%">
@@ -46,12 +46,20 @@ export default {
     };
   },
   methods: {
-    retrieveTutorials() {
+      checkValid() {
+      for (const [ key,value] of Object.entries(this.load)) {
+        console.log(`${key}: ${value}`);
+        if(!value){
+          return false;
+        }
+      }
+      return true;
+    },
+    retrieveReward() {
       console.log(this.load);
       RewardDataService.getAll(this.load)
         .then((response) => {
           console.log("response", response);
-
           this.tableData=response.data.data;
         })
         .catch((e) => {
@@ -60,7 +68,7 @@ export default {
     },
   },
   mounted() {
-    this.retrieveTutorials();
+    this.retrieveReward();
   },
 };
 </script>
