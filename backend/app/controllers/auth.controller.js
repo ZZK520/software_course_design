@@ -36,9 +36,9 @@ exports.signin = async (req, res) => {
         let passwordIsValid = validatePWD(password,user.Password);
  
         // 调试--
-        // console.log('passwordIsValid', passwordIsValid);
-        // console.log('password', password);
-        // console.log('user.Password', user.Password);
+        console.log('passwordIsValid', passwordIsValid);
+        console.log('password', password);
+        console.log('user.Password', user.Password);
         if (!passwordIsValid) {
           responseData.status = 401;
           responseData.data.accessToken = null;
@@ -47,10 +47,11 @@ exports.signin = async (req, res) => {
 
         }
         else {
-
-          const token = getToken(user.ID);
+          const token = getToken(user);
           const result = {
             accessToken: token,
+            ID:user.ID,
+            IsAccountant:user.IsAccountant
           };
           responseData.status = 200;
           responseData.data = result;
@@ -58,9 +59,6 @@ exports.signin = async (req, res) => {
           return res.json(responseData);
         }
       }
-
-
-
     });
 };
 

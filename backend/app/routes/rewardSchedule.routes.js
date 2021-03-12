@@ -9,8 +9,6 @@ module.exports = app => {
   // Retrieve all rewardSchedule
   router.get("/", rewardSchedule.findAll);
 
-  // Retrieve all published rewardSchedule
-  router.get("/published", rewardSchedule.findAllPublished);
 
   // Retrieve a single Tutorial with id
   router.get("/:id", rewardSchedule.findOne);

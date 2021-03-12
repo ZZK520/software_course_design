@@ -203,8 +203,8 @@ function filterByTime(Model, time) {
     cond = { };
   }
   return new Promise(function (resolve, reject) {
+    // populate('Employee',{"Name":1,"ID":1}).
     Model.find(cond).
-      populate('Employee').
       exec(function (err, data) {
         if (err) {
           reject(err);
